@@ -1,0 +1,150 @@
+openapi: "3.0.0"
+info:
+  version: 0.0.1
+  title: post-services
+  description: Api servicios de post
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:3000/posts/v1
+  - url: http://test.com/posts/v1
+  - url: http://production.com/posts/v1
+paths:
+  /getPost:
+    get:
+      description: Retorna los Post paginados
+      operationId: getPost
+      responses:
+        "200":
+          description: get client response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /createPost:
+    post:
+      description: Registra un post nuevo
+      operationId: createPost
+      requestBody:
+        description: Campos requeridos
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterClient"
+      responses:
+        "200":
+          description: login response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /updatePost:
+    patch:
+      description: Actualiza el estado un cliente
+      operationId: updateClient
+      requestBody:
+        description: Campos requeridos
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePost"
+      responses:
+        "200":
+          description: login response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    CreatePost:
+      required:
+        - client_name
+        - id_identification_type
+        - identification_number
+        - id_city
+        - email
+        - cellphone
+        - contact
+        - direction
+        - phone
+        - url_rut_file
+      properties:
+        client_name:
+          type: string
+        id_identification_type:
+          type: number
+        identification_number:
+          type: string
+        id_city:
+          type: number
+        email:
+          type: string
+        cellphone:
+          type: string
+        contact:
+          type: string
+        direction:
+          type: string
+        phone:
+          type: string
+        url_rut_file:
+          type: string
+    UpdatePost:
+      required:
+        - id_post
+        - new_message
+      properties:
+        id_post:
+          type: number
+        new_message:
+          type: string
+    Response:
+      required:
+        - response
+        - error
+      properties:
+        response:
+          type: object
+        error:
+          type: number
+    Error:
+      required:
+        - message
+        - error
+      properties:
+        message:
+          type: string
+        error:
+          type: boolean
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
