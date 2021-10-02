@@ -1,0 +1,51 @@
+Listening on port 3000
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/comments
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/postevents
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/posts
+Listening on port 3000
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/comments
+Listening on port 3000
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/comments
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/postevents
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/posts
+Listening on port 3000
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/comments
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/postevents
+/Users/juandevelop/Documents/Developer/Prueba_Vecindario/vecipost/src/routes/posts
+Listening on port 3000
+Listening on port 3000
+Listening on port 3000
+Listening on port 3000
+Listening on port 3000
+Listening on port 3000
+Listening on port 3000
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC;
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC;
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC;
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 5 OFFSET 5;
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 5 OFFSET 5;
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 5 OFFSET 5;
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 5 OFFSET 5;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 0;
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 0;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 10;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 1;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 2;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 20;
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 20;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 1;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 0;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 10;
+Listening on port 3000
+Executing (default): SELECT "id", "name", "content", "likes", "dislikes", "user_email", "created_at", "updated_at" FROM "posts" AS "posts" ORDER BY "posts"."created_at" DESC LIMIT 10 OFFSET 0;

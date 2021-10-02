@@ -1,0 +1,2 @@
+node_modules/.bin/sequelize model:create --name posts --attributes "name:string, content:string, likes:integer, dislikes:integer, user_email:string" --underscored
+node_modules/.bin/sequelize model:create --name posts_comments --attributes "post_id:integer, name:string, content:string, user_email:string" --underscored

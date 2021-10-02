@@ -1,22 +1,22 @@
 const { verifyToken } = require('../../middleware/authorization');
 
-const { getPosts } = require('../../handlers/posts/postsHandlers');
+const { getPosts, createPost, updatePost, deletePost } = require('../../handlers/posts/postsHandlers');
 
 
 const init = (app) => {
     var myLogger = async function (req, res, next) {
       res.setTimeout(50000, function () {
-        const response = { message: 'La petición esta tardando en responder.', token: null, error: true };
+        const response = { message: 'La petición esta tardando en responder.', error: true };
         res.json(response);
       });
   
       next();
     };
   
-    app.get('/posts/v1/getPost', [myLogger, verifyToken], getPosts);
-    app.post('/posts/v1/createPost', [myLogger, verifyToken], getPosts);
-    app.patch('/posts/v1/updatePost', [myLogger, verifyToken], getPosts);
-    app.delete('/posts/v1/deletePost', [myLogger, verifyToken], getPosts);
+    app.get('/posts/v1/getPosts/:limit/:page', [myLogger], getPosts);
+    app.post('/posts/v1/createPost', [myLogger], createPost);
+    app.patch('/posts/v1/updatePost', [myLogger], updatePost);
+    app.delete('/posts/v1/deletePost', [myLogger], deletePost);
 
     app.use((err, req, res, next) => {
       //saveLogError();

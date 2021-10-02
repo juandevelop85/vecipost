@@ -1,16 +1,5 @@
 const socketIO = require('socket.io');
-const redis = require('redis');
 const { promisify } = require('util');
-const { saveLogError } = require('./functions/generalFunctions');
-const redisPort = Number(process.env.REDIS_PORT) || 6379;
-const redisHost = process.env.REDIS_HOST || 'localhost';
-
-const client = redis.createClient({
-  port: redisPort,
-  host: redisHost,
-});
-
-const getAsync = promisify(client.get).bind(client);
 
 function init(server, app) {
   try {
@@ -29,7 +18,6 @@ function init(server, app) {
       //Registra el socket del usuario logueado
       socket.on('set user-socket', async (data) => {
         let socketUserId = [];
-        let userIds = await getAsync(data.id_user);
         if (userIds !== '' && userIds !== null) {
           socketUserId = JSON.parse(userIds);
           socketUserId = [...socketUserId, data.socketId];
@@ -54,7 +42,7 @@ function init(server, app) {
 
     app.use(socketIo);
   } catch (e) {
-    saveLogError(e.message, 'registerUser');
+    console.log(e);
   }
 }
 

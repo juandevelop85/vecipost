@@ -1,0 +1,62 @@
+{
+  "development": {
+    "username": "veciadmin",
+    "password": "p39pedjw5a08y1w2",
+    "database": "vecipost",
+    "host": "localhost",
+    "dialect": "postgres",
+    "define": {
+      "underscored": true,
+      "freezeTableName": true,
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      },
+      "timestamps": true,
+      "createdAt": "created_at",
+      "updatedAt": "updated_at",
+      "createdBy": "created_by",
+      "updatedBy": "updated_by"
+    }    
+  },
+  "test": {
+    "username": "veciadmin",
+    "password": "p39pedjw5a08y1w2",
+    "database": "vecipost",
+    "host": "localhost",
+    "dialect": "postgres",
+    "define": {
+      "underscored": true,
+      "freezeTableName": true,
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      },
+      "timestamps": true,
+      "createdAt": "created_at",
+      "updatedAt": "updated_at",
+      "createdBy": "created_by",
+      "updatedBy": "updated_by"
+    }
+  },
+  "production": {
+    "username": "veciadmin",
+    "password": "p39pedjw5a08y1w2",
+    "database": "vecipost",
+    "host": "localhost",
+    "dialect": "postgres",
+    "define": {
+      "underscored": true,
+      "freezeTableName": true,
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      },
+      "timestamps": true,
+      "createdAt": "created_at",
+      "updatedAt": "updated_at",
+      "createdBy": "created_by",
+      "updatedBy": "updated_by"
+    }
+  }
+}

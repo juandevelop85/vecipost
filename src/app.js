@@ -2,14 +2,13 @@ require('dotenv').config();
 
 var express = require('express');
 var compression = require('compression');
-// const fileUpload = require('express-fileupload');
 var path = require('path');
 var bluebird = require('bluebird');
 var fs = require('fs');
 var cors = require('cors');
 
 // 1. Import the express-openapi-validator library
-const { OpenApiValidator } = require('express-openapi-validator');
+const OpenApiValidator = require('express-openapi-validator');
 
 const ROUTES_DIR = 'routes/';
 
@@ -30,9 +29,12 @@ async function main() {
     try {
       const apiSpec = path.join(__dirname, `/documentation/${c}.yaml`);
       app.use(`/spec/${c}`, express.static(apiSpec));
-      await new OpenApiValidator({
-        apiSpec,
-      }).install(app);
+      app.use(
+        OpenApiValidator.middleware({
+          apiSpec: apiSpec,
+          validateResponses: false, // <-- to validate responses
+        })
+      );
       require(path.join(__dirname, ROUTES_DIR, c)).init(app);
     } catch (error) {
       console.error(error);

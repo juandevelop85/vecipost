@@ -1,0 +1,142 @@
+openapi: "3.0.0"
+info:
+  version: 0.0.1
+  title: post-services
+  description: Api servicios de post
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:3000/comments/v1
+  - url: http://test.com/comments/v1
+  - url: http://production.com/comments/v1
+paths:
+  /getComments/{id_post}:
+    get:
+      description: Retorna los Commentarios de un post
+      operationId: getComments
+      parameters:
+        - name: id_post
+          in: path
+          description: Id del post
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: get client response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /createComments:
+    post:
+      description: Registra un Commentario nuevo
+      operationId: createComments
+      requestBody:
+        description: Campos requeridos
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateComments"
+      responses:
+        "200":
+          description: login response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /updateComment:
+    patch:
+      description: Actualiza el estado un cliente
+      operationId: updateComment
+      requestBody:
+        description: Campos requeridos
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateComment"
+      responses:
+        "200":
+          description: login response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    CreateComments:
+      required:
+        - id_post
+        - name
+        - content
+        - user_email
+      properties:
+        id_post:
+          type: string
+        name:
+          type: string
+        content:
+          type: number
+        identification_number:
+          type: string
+        user_email:
+          type: number        
+    UpdateComment:
+      required:
+        - id_post
+        - new_message
+      properties:
+        id_post:
+          type: number
+        new_message:
+          type: string
+    Response:
+      required:
+        - response
+        - error
+      properties:
+        response:
+          type: object
+        error:
+          type: number
+    Error:
+      required:
+        - message
+        - error
+      properties:
+        message:
+          type: string
+        error:
+          type: boolean
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key

@@ -1,0 +1,102 @@
+openapi: "3.0.0"
+info:
+  version: 0.0.1
+  title: post-services
+  description: Api servicios de post
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:3000/comments/v1
+  - url: http://test.com/comments/v1
+  - url: http://production.com/comments/v1
+paths:
+  /likePost:
+    patch:
+      description: Registra un Commentario nuevo
+      operationId: createComments
+      requestBody:
+        description: Campos requeridos
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LikePost"
+      responses:
+        "200":
+          description: login response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /dislikePost:
+    patch:
+      description: Actualiza el estado un cliente
+      operationId: dislikePost
+      requestBody:
+        description: Campos requeridos
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DisLikePost"
+      responses:
+        "200":
+          description: login response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    LikePost:
+      required:
+        - id_post
+      properties:
+        id_post:
+          type: string
+    DisLikePost:
+      required:
+        - id_post
+      properties:
+        id_post:
+          type: number
+    Response:
+      required:
+        - response
+        - error
+      properties:
+        response:
+          type: object
+        error:
+          type: number
+    Error:
+      required:
+        - message
+        - error
+      properties:
+        message:
+          type: string
+        error:
+          type: boolean
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key

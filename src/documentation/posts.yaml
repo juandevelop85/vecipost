@@ -12,10 +12,25 @@ servers:
   - url: http://test.com/posts/v1
   - url: http://production.com/posts/v1
 paths:
-  /getPost:
+  /getPosts/{limit}/{page}:
     get:
       description: Retorna los Post paginados
-      operationId: getPost
+      operationId: getPosts
+      parameters:
+        - name: limit
+          in: path
+          description: cantidad limite para paginar
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: page
+          in: path
+          description: numero de la paginacion
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: get client response
@@ -40,7 +55,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RegisterClient"
+              $ref: "#/components/schemas/CreatePost"
       responses:
         "200":
           description: login response
@@ -58,7 +73,7 @@ paths:
   /updatePost:
     patch:
       description: Actualiza el estado un cliente
-      operationId: updateClient
+      operationId: updatePost
       requestBody:
         description: Campos requeridos
         required: true
@@ -84,37 +99,18 @@ components:
   schemas:
     CreatePost:
       required:
-        - client_name
-        - id_identification_type
-        - identification_number
-        - id_city
-        - email
-        - cellphone
-        - contact
-        - direction
-        - phone
-        - url_rut_file
+        - name
+        - content
+        - user_email
       properties:
-        client_name:
+        name:
           type: string
-        id_identification_type:
+        content:
           type: number
         identification_number:
           type: string
-        id_city:
-          type: number
-        email:
-          type: string
-        cellphone:
-          type: string
-        contact:
-          type: string
-        direction:
-          type: string
-        phone:
-          type: string
-        url_rut_file:
-          type: string
+        user_email:
+          type: number        
     UpdatePost:
       required:
         - id_post

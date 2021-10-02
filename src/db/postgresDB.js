@@ -14,6 +14,7 @@ const basename = path.basename(__filename);
  */
 class Postgres {
   constructor() {
+    this.isConnected = false;
     this.user = process.env.DB_USER_PG || '';
     this.password = process.env.DB_PASSWORD_PG || '';
     this.database = process.env.DATABASE || 'alican_db';
@@ -27,18 +28,16 @@ class Postgres {
       host: this.host,
       port: this.port,
       dialect: 'postgres',
-      logging: false, //console.log,
+      logging: false,//console.log,
       dialectOptions: {
-        options: {
-          requestTimeout: 10000,
-          //instanceName: null,
-          //useUTC: false
-          //encrypt: config.options.encrypt || false,
-          // ssl: {
-          //   rejectUnauthorized: true,
-          //   ca: [this.ca],
-          // },
-        },
+        requestTimeout: 10000,
+        //instanceName: null,
+        //useUTC: false
+        //encrypt: config.options.encrypt || false,
+        // ssl: {
+        //   rejectUnauthorized: true,
+        //   ca: [this.ca],
+        // },
       },
       timezone: '-05:00',
       pool: {
@@ -55,6 +54,8 @@ class Postgres {
   }
 
   static get instance() {
+    //this._instance = new this()
+    //return new this();
     return this._instance || (this._instance = new this());
   }
 
@@ -65,6 +66,7 @@ class Postgres {
       })
       .forEach((file) => {
         const model = require(path.join(this.MODELS_ROUTE, file))(this.sequelize, Sequelize.DataTypes);
+        //var model = this.sequelize['import'](path.join(this.MODELS_ROUTE, file))(this.sequelize, Sequelize.DataTypes);
         this.db[model.name] = model;
       });
 
@@ -74,9 +76,19 @@ class Postgres {
       }
     });
 
+    // fs.readdirSync(this.MODELS_ROUTE).forEach((file) => {
+    //   var model = this.sequelize['import'](path.join(this.MODELS_ROUTE, file));
+    //   this.db[model.name] = model;
+    // });
+    // Object.keys(this.db).forEach((modelName) => {
+    //   if (this.db[modelName].associate) {
+    //     this.db[modelName].associate(this.db);
+    //   }
+    // });
     this.db.sequelize = this.sequelize;
     this.db.Sequelize = Sequelize.Sequelize;
     this.db.executeQuery = this.executeQuery.bind(this);
+    this.isConnected = true;
   }
 
   executeQuery(sql, values, type = 'INSERT') {
