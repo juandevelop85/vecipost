@@ -1,4 +1,4 @@
-const { getPostsPagination } = require("../../functions/postFunctions");
+const { getPostsPagination, createNewPosts } = require("../../functions/postFunctions");
 
 
 /**
@@ -14,13 +14,16 @@ async function getPosts(req, res) {
     let response = {};
 
     await getPostsPagination(input).then((success) => {
-      response = { posts: success, error: false }
+      console.log(success)
+      response = { posts: success, status: 'SUCCESS', error: false, page: input.page }
     })
 
     res.json(response);
   } catch (e) {
+    console.log(e)
     res.status(500).send(
       (respuesta = {
+        status: 'ERROR', 
         message: 'Error al realizar petición',
         error: true,
       })
@@ -29,13 +32,33 @@ async function getPosts(req, res) {
 }
 
 /**
- * @description Handler crear un documento.
+ * @description Handler crear un post.
  * @author Juan Sebastian Vernaza Lopez
  * @date 01/10/2021
  * @param {*} req
  * @param {*} res
  */
-async function createPost(req, res) {}
+async function createPost(req, res) {
+  try {
+    let input = req.body;
+    let response = {};
+
+    await createNewPosts(input).then((success) => {
+      console.log(success)
+      response = { posts: success, error: false, status: 'SUCCESS' }
+    })
+
+    res.json(response);
+  } catch (e) {
+    res.status(500).send(
+      (respuesta = {
+        status: 'ERROR', 
+        message: 'Error al realizar petición',
+        error: true,
+      })
+    );
+  }
+}
 
 /**
  * @description Handler para actualizar un post

@@ -6,16 +6,50 @@ let models = require('../models');
  * @date 01/10/2021
  * @return {*}
  */
-function getPostsPagination({limit}) {
+function getPostsPagination({ limit, page }) {
   return new Promise((resolve, reject) => {
     models.posts
       .findAll({
-        offset: 0,
+        include: [
+          {
+            model: models.posts_comments,
+          },
+        ],
+        offset: page * limit,
         limit,
         order: [['created_at', 'DESC']],
+        plain: false,
+        nest: true,
       })
-      .then((clients) => {
-        resolve(clients);
+      .then((posts) => {
+        resolve(posts);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+/**
+ * @description Crea un nuevo post en la BD
+ * @author Juan Sebastian Vernaza Lopez
+ * @date 02/10/2021
+ * @param {*} {name, content, user_email}
+ * @return {*}
+ */
+function createNewPosts({ name, content, user_email }) {
+  return new Promise((resolve, reject) => {
+    models.posts
+      .create({
+        name,
+        content,
+        user_email,
+        likes: 0,
+        dislikes: 0,
+        created_at: new Date()
+      })
+      .then(async (success) => {
+        resolve(success);
       })
       .catch((e) => {
         reject(e);
@@ -25,4 +59,5 @@ function getPostsPagination({limit}) {
 
 module.exports = {
   getPostsPagination,
+  createNewPosts,
 };
