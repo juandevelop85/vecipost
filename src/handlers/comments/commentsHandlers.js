@@ -1,28 +1,29 @@
-const { getPostsPagination, createNewPosts } = require("../../functions/posts/postFunctions");
-
+const { getPostComments, createNewComments } = require('../../functions/comments/commentsFunctions');
 
 /**
- * @description Handler para retorna los post paginados.
+ * @description Handler para retorna los Comment paginados.
  * @author Juan Sebastian Vernaza Lopez
  * @date 01/10/2021
  * @param {*} req
  * @param {*} res
  */
-async function getPosts(req, res) {
+async function getAllPostComments(req, res) {
   try {
     let input = req.params;
     let response = {};
 
-    await getPostsPagination(input).then((success) => {
-      response = { posts: success, status: 'SUCCESS', error: false, page: input.page }
-    })
+    
+
+    await getPostComments(input).then((success) => {
+      response = { comments: success, status: 'SUCCESS', error: false };
+    });
 
     res.json(response);
   } catch (e) {
-    console.log(e)
+    
     res.status(500).send(
       (respuesta = {
-        status: 'ERROR', 
+        status: 'ERROR',
         message: 'Error al realizar petición',
         error: true,
       })
@@ -31,26 +32,27 @@ async function getPosts(req, res) {
 }
 
 /**
- * @description Handler crear un post.
+ * @description Handler crear un Comment.
  * @author Juan Sebastian Vernaza Lopez
  * @date 01/10/2021
  * @param {*} req
  * @param {*} res
  */
-async function createPost(req, res) {
+async function createPostComment(req, res) {
   try {
     let input = req.body;
     let response = {};
 
-    await createNewPosts(input).then((success) => {
-      response = { posts: success, error: false, status: 'SUCCESS' }
-    })
+    await createNewComments(input).then((success) => {
+      response = { comments: success, error: false, status: 'SUCCESS' };
+    });
 
     res.json(response);
   } catch (e) {
+    console.log(e);
     res.status(500).send(
       (respuesta = {
-        status: 'ERROR', 
+        status: 'ERROR',
         message: 'Error al realizar petición',
         error: true,
       })
@@ -59,26 +61,26 @@ async function createPost(req, res) {
 }
 
 /**
- * @description Handler para actualizar un post
+ * @description Handler para actualizar un Comment
  * @author Juan Sebastian Vernaza Lopez
  * @date 01/10/2021
  * @param {*} req
  * @param {*} res
  */
-async function updatePost(req, res) {}
+async function updateComment(req, res) {}
 
 /**
- * @description Handler para eliminar un post.
+ * @description Handler para eliminar un Comment.
  * @author Juan Sebastian Vernaza Lopez
  * @date 01/10/2021
  * @param {*} req
  * @param {*} res
  */
-async function deletePost(req, res) {}
+async function deleteComment(req, res) {}
 
 module.exports = {
-  getPosts,
-  createPost,
-  updatePost,
-  deletePost,
+  getAllPostComments,
+  createPostComment,
+  updateComment,
+  deleteComment,
 };

@@ -1,6 +1,7 @@
 const { verifyToken } = require('../../middleware/authorization');
 
-const { getPosts } = require('../../handlers/posts/postsHandlers');
+const { getAllPostComments, createPostComment } = require('../../handlers/comments/commentsHandlers');
+const { generateMessage } = require('../../handlers/errors/errorsMessageBuilder');
 
 
 const init = (app) => {
@@ -13,15 +14,15 @@ const init = (app) => {
       next();
     };
   
-    // app.get('/posts/v1/getPost', [myLogger, verifyToken], getPosts);
-    // app.post('/posts/v1/createPost', [myLogger, verifyToken], getPosts);
+    app.get('/comments/v1/getPostComments/:post_id', [myLogger, verifyToken], getAllPostComments);
+    app.post('/comments/v1/createComment', [myLogger], createPostComment);
     // app.patch('/posts/v1/updatePost', [myLogger, verifyToken], getPosts);
     // app.delete('/posts/v1/deletePost', [myLogger, verifyToken], getPosts);
 
-    app.use((err, req, res, next) => {
-      //saveLogError();
+    app.use(async(err, req, res, next) => {
+      let message = await generateMessage(err);
       res.status(err.status || 500).json({
-        message: err.message,
+        message: message,
         errors: err.errors,
         error: true,
       });

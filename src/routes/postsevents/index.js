@@ -13,10 +13,8 @@ const init = (app) => {
       next();
     };
   
-    // app.get('/posts/v1/getPost', [myLogger, verifyToken], getPosts);
-    // app.post('/posts/v1/createPost', [myLogger, verifyToken], getPosts);
-    // app.patch('/posts/v1/updatePost', [myLogger, verifyToken], getPosts);
-    // app.delete('/posts/v1/deletePost', [myLogger, verifyToken], getPosts);
+    // app.patch('/posts/v1/likePost', [myLogger], getPosts);
+    // app.patch('/posts/v1/dislikePost', [myLogger, verifyToken], getPosts);
 
     app.use((err, req, res, next) => {
       //saveLogError();

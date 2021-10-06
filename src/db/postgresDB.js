@@ -17,28 +17,30 @@ class Postgres {
     this.isConnected = false;
     this.user = process.env.DB_USER_PG || '';
     this.password = process.env.DB_PASSWORD_PG || '';
-    this.database = process.env.DATABASE || 'alican_db';
+    this.database = process.env.DATABASE || 'postgres';
     this.host = process.env.DB_HOST || 'localhost';
     this.port = Number(process.env.DB_PORT) || 0;
     this.db = {};
     this.MODELS_ROUTE = path.join(__dirname, '../models/');
-
-    this.ca = fs.readFileSync(path.join(__dirname, '/ca-certificate.crt'));
+    // this.ca = fs.readFileSync(path.join(__dirname, '/ca-certificate.crt'));
     this.sequelize = new Sequelize.Sequelize(this.database, this.user, this.password, {
       host: this.host,
       port: this.port,
       dialect: 'postgres',
-      logging: false,//console.log,
+      logging: false, //console.log,
       dialectOptions: {
-        requestTimeout: 10000,
-        //instanceName: null,
-        //useUTC: false
-        //encrypt: config.options.encrypt || false,
-        // ssl: {
-        //   rejectUnauthorized: true,
-        //   ca: [this.ca],
-        // },
+        options: {
+          requestTimeout: 10000,
+          //instanceName: null,
+          //useUTC: false
+          //encrypt: config.options.encrypt || false,
+          // ssl: {
+          //   rejectUnauthorized: true,
+          //   ca: [this.ca],
+          // },
+        },
       },
+      define: {},
       timezone: '-05:00',
       pool: {
         max: 87,
@@ -47,7 +49,17 @@ class Postgres {
         idle: 10000,
       },
       define: {
-        timestamps: false,
+        timestamps: true,
+        underscored: true,
+        freezeTableName: true,
+        charset: 'utf8',
+        dialectOptions: {
+          collate: 'utf8_general_ci',
+        },
+        timestamps: true,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
+        createdBy: 'created_by',
       },
     });
     this.createModels();
@@ -66,7 +78,6 @@ class Postgres {
       })
       .forEach((file) => {
         const model = require(path.join(this.MODELS_ROUTE, file))(this.sequelize, Sequelize.DataTypes);
-        //var model = this.sequelize['import'](path.join(this.MODELS_ROUTE, file))(this.sequelize, Sequelize.DataTypes);
         this.db[model.name] = model;
       });
 
@@ -76,15 +87,6 @@ class Postgres {
       }
     });
 
-    // fs.readdirSync(this.MODELS_ROUTE).forEach((file) => {
-    //   var model = this.sequelize['import'](path.join(this.MODELS_ROUTE, file));
-    //   this.db[model.name] = model;
-    // });
-    // Object.keys(this.db).forEach((modelName) => {
-    //   if (this.db[modelName].associate) {
-    //     this.db[modelName].associate(this.db);
-    //   }
-    // });
     this.db.sequelize = this.sequelize;
     this.db.Sequelize = Sequelize.Sequelize;
     this.db.executeQuery = this.executeQuery.bind(this);
