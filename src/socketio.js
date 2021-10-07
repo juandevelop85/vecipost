@@ -6,7 +6,7 @@ function init(server, app) {
     const options = {
       /* ... */
     };
-    //console.log(app);
+    
     const io = socketIO(server);
     io.sockets.on('connection', function (socket) {
       var socketId = socket.id;

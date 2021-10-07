@@ -12,14 +12,12 @@ async function getPosts(req, res) {
   try {
     let input = req.params;
     let response = {};
-
     await getPostsPagination(input).then((success) => {
       response = { posts: success, status: 'SUCCESS', error: false, page: input.page }
     })
 
     res.json(response);
   } catch (e) {
-    console.log(e)
     res.status(500).send(
       (respuesta = {
         status: 'ERROR', 

@@ -22,7 +22,7 @@ class Postgres {
     this.port = Number(process.env.DB_PORT) || 0;
     this.db = {};
     this.MODELS_ROUTE = path.join(__dirname, '../models/');
-    // this.ca = fs.readFileSync(path.join(__dirname, '/ca-certificate.crt'));
+    this.ca = fs.readFileSync(path.join(__dirname, '/ca-certificate.crt'));
     this.sequelize = new Sequelize.Sequelize(this.database, this.user, this.password, {
       host: this.host,
       port: this.port,
@@ -34,10 +34,10 @@ class Postgres {
           //instanceName: null,
           //useUTC: false
           //encrypt: config.options.encrypt || false,
-          // ssl: {
-          //   rejectUnauthorized: true,
-          //   ca: [this.ca],
-          // },
+          ssl: {
+            rejectUnauthorized: true,
+            ca: [this.ca],
+          },
         },
       },
       define: {},

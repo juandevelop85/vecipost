@@ -16,9 +16,7 @@ const init = (app) => {
   
     app.get('/comments/v1/getPostComments/:post_id', [myLogger, verifyToken], getAllPostComments);
     app.post('/comments/v1/createComment', [myLogger], createPostComment);
-    // app.patch('/posts/v1/updatePost', [myLogger, verifyToken], getPosts);
-    // app.delete('/posts/v1/deletePost', [myLogger, verifyToken], getPosts);
-
+    
     app.use(async(err, req, res, next) => {
       let message = await generateMessage(err);
       res.status(err.status || 500).json({

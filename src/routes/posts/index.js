@@ -15,9 +15,9 @@ const init = (app) => {
     };
   
     app.get('/posts/v1/getPosts/:limit/:page', [myLogger, verifyToken], getPosts);
-    app.post('/posts/v1/createPost', [myLogger], createPost);
-    app.patch('/posts/v1/updatePost', [myLogger], updatePost);
-    app.delete('/posts/v1/deletePost', [myLogger], deletePost);
+    app.post('/posts/v1/createPost', [myLogger, verifyToken], createPost);
+    app.patch('/posts/v1/updatePost', [myLogger, verifyToken], updatePost);
+    app.delete('/posts/v1/deletePost', [myLogger, verifyToken], deletePost);
 
     app.use(async (err, req, res, next) => {
       //saveLogError();

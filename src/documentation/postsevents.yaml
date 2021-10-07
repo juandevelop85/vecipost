@@ -8,12 +8,12 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: http://localhost:3000/comments/v1
-  - url: http://test.com/comments/v1
-  - url: http://production.com/comments/v1
+  - url: http://localhost:3000/postsevents/v1
+  - url: http://test.com/postsevents/v1
+  - url: http://production.com/postsevents/v1
 paths:
   /likePost:
-    patch:
+    post:
       description: Registra un Commentario nuevo
       operationId: createComments
       requestBody:
@@ -66,15 +66,19 @@ components:
   schemas:
     LikePost:
       required:
-        - id_post
+        - post_id
+        - isLike
       properties:
-        id_post:
-          type: string
+        post_id:
+          type: number
+        isLike:
+          nullable: true
+          type: boolean
     DisLikePost:
       required:
-        - id_post
+        - post_id
       properties:
-        id_post:
+        post_id:
           type: number
     Response:
       required:

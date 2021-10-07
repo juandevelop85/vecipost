@@ -1,4 +1,5 @@
-const { getPostComments, createNewComments } = require('../../functions/comments/commentsFunctions');
+const { createNewComments } = require('../../functions/comments/commentsFunctions');
+const { getPostDetail } = require('../../functions/posts/postFunctions');
 
 /**
  * @description Handler para retorna los Comment paginados.
@@ -7,14 +8,14 @@ const { getPostComments, createNewComments } = require('../../functions/comments
  * @param {*} req
  * @param {*} res
  */
+
+//TODO sacar de aqui y llevar al modulo de post
 async function getAllPostComments(req, res) {
   try {
     let input = req.params;
     let response = {};
 
-    
-
-    await getPostComments(input).then((success) => {
+    await getPostDetail(input).then((success) => {
       response = { comments: success, status: 'SUCCESS', error: false };
     });
 
@@ -49,7 +50,6 @@ async function createPostComment(req, res) {
 
     res.json(response);
   } catch (e) {
-    console.log(e);
     res.status(500).send(
       (respuesta = {
         status: 'ERROR',
