@@ -10,7 +10,7 @@ info:
 servers:
   - url: http://localhost:3000/posts/v1
   - url: http://test.com/posts/v1
-  - url: http://production.com/posts/v1
+  - url: http://164.90.159.50/posts/v1
 paths:
   /getPosts/{limit}/{page}:
     get:

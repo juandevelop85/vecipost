@@ -10,7 +10,7 @@ info:
 servers:
   - url: http://localhost:3000/comments/v1
   - url: http://test.com/comments/v1
-  - url: http://production.com/comments/v1
+  - url: http://164.90.159.50/comments/v1
 paths:
   /getPostComments/{post_id}:
     get:

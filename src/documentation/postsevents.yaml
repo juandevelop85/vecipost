@@ -2,7 +2,7 @@ openapi: "3.0.0"
 info:
   version: 0.0.1
   title: post-services
-  description: Api servicios de post
+  description: Api servicios de eventos del post
   termsOfService: http://swagger.io/terms/
   license:
     name: Apache 2.0
@@ -10,7 +10,7 @@ info:
 servers:
   - url: http://localhost:3000/postsevents/v1
   - url: http://test.com/postsevents/v1
-  - url: http://production.com/postsevents/v1
+  - url: http://164.90.159.50/postsevents/v1
 paths:
   /likePost:
     post:
