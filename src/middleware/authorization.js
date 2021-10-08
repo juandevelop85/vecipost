@@ -1,5 +1,5 @@
 let verifyToken = async (req, res, next) => {
-  let user_session = req.get('u_session');
+  let user_session = req.get('authorization');
   
   if (Object.keys(req.body).length !== 0) {
     req.body.session_user_email = user_session;
