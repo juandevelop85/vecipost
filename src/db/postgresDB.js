@@ -34,10 +34,10 @@ class Postgres {
           //instanceName: null,
           //useUTC: false
           //encrypt: config.options.encrypt || false,
-          ssl: {
-            rejectUnauthorized: true,
-            ca: [this.ca],
-          },
+        },
+        ssl: {
+          rejectUnauthorized: true,
+          ca: [this.ca],
         },
       },
       define: {},
