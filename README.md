@@ -48,7 +48,14 @@ Esta aplicacion actualemente requiere lo siguientes plugins.
 | webpack | [https://github.com/webpack/webpack] |
 | babel | [https://babel.dev/docs/en/next/babel-core] |
 
+## Documentación
 
+La documentación del api la encontrara en las siguietes url:
+- [comments]
+- [posts] 
+- [postsevents]
+
+Esta documentacion puede ser visualizada en [swagger-editor] o en herramientas como POSTMAN.
 
 ## License
 
@@ -66,5 +73,9 @@ MIT
    [express]: <http://expressjs.com>
    [ReactJs]: <https://reactjs.org/>
    [pm2]: <https://pm2.keymetrics.io/>
+   [comments]: <http://164.90.159.50/api/spec/comments>
+   [posts]: <http://164.90.159.50/api/spec/posts>
+   [postsevents]: <http://164.90.159.50/api/spec/postsevents>
+   [swagger-editor]: <https://editor.swagger.io/>
 
    
