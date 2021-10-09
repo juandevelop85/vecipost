@@ -23,7 +23,7 @@ const init = (app) => {
       //saveLogError();
       let message = await generateMessage(err);
       res.status(err.status || 500).json({
-        message: err.message,
+        message: message,
         errors: err.errors,
         error: true,
       });

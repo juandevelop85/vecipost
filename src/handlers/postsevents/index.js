@@ -13,6 +13,12 @@ async function setPostLike(req, res) {
     let response = {};
     let codeStatus = 200;
 
+    if(input.session_user_email === undefined){
+      codeStatus = 400;
+      res.status(codeStatus).json({message: 'Débes estar logueado para esta acción'});
+      return;
+    }
+
     await updateEventPost(input)
       .then((success) => {
         response = { posts: success, status: 'SUCCESS', error: false, page: input.page };

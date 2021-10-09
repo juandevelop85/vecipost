@@ -1,5 +1,6 @@
 const { verifyToken } = require('../../middleware/authorization');
 const { setPostLike } = require('../../handlers/postsevents');
+const { generateMessage } = require('../../handlers/errors/errorsMessageBuilder');
 
 const init = (app) => {
   var myLogger = async function (req, res, next) {
@@ -13,10 +14,11 @@ const init = (app) => {
 
   app.post('/postsevents/v1/likePost', [myLogger, verifyToken], setPostLike);
 
-  app.use((err, req, res, next) => {
+  app.use(async(err, req, res, next) => {
     //saveLogError();
+    let message = await generateMessage(err);
     res.status(err.status || 500).json({
-      message: err.message,
+      message: message,
       errors: err.errors,
       error: true,
     });
