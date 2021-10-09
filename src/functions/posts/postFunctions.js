@@ -10,7 +10,6 @@ const postgresDB = require('../../db/postgresDB');
  * @return {*}
  */
  function getPostDetail({ post_id, session_user_email }) {
-   console.log(post_id, session_user_email)
   return new Promise((resolve, reject) => {
     let posts = postgresDB.default.instance.db.posts;
     let posts_comments = postgresDB.default.instance.db.posts_comments;
@@ -86,7 +85,6 @@ const postgresDB = require('../../db/postgresDB');
  * @return {*}
  */
 function getPostsPagination({ limit, page, session_user_email }) {
-  console.log(limit, page, session_user_email)
   return new Promise((resolve, reject) => {
     const posts = postgresDB.default.instance.db.posts;
     const posts_comments = postgresDB.default.instance.db.posts_comments;

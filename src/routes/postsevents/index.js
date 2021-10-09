@@ -12,7 +12,6 @@ const init = (app) => {
   };
 
   app.post('/postsevents/v1/likePost', [myLogger, verifyToken], setPostLike);
-  // app.patch('/posts/v1/dislikePost', [myLogger, verifyToken], getPosts);
 
   app.use((err, req, res, next) => {
     //saveLogError();
