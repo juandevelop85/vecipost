@@ -47,7 +47,7 @@ function clearUserElection(post_id, session_user_email) {
           dislike: 0,
         },
         {
-          where: { post_id },
+          where: { post_id, user_email: session_user_email },
           returning: true,
         }
       )
