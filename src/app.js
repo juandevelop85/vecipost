@@ -11,6 +11,9 @@ var helmet = require('helmet');
 // 1. Import the express-openapi-validator library
 const OpenApiValidator = require('express-openapi-validator');
 
+// Import postgresDB singleton
+const postgresDB = require('./db/postgresDB').default;
+
 const ROUTES_DIR = 'routes/';
 
 async function main() {
@@ -36,6 +39,17 @@ async function main() {
   }));
 
   app.use(express.urlencoded({ extended: false }));
+
+  // Add /health route to check server and DB connectivity
+  app.get('/health', async (req, res) => {
+    try {
+      // Perform a simple query to verify DB connection
+      await postgresDB.instance.db.sequelize.query('SELECT 1');
+      res.json({ status: 'UP', database: 'CONNECTED' });
+    } catch (error) {
+      res.status(503).json({ status: 'DOWN', database: 'DISCONNECTED', error: error.message });
+    }
+  });
 
   const directories = await bluebird.promisify(fs.readdir)(path.join(__dirname, ROUTES_DIR));
 
