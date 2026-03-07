@@ -1,264 +1,92 @@
-// let models = require('../db ');
 const postgresDB = require('../../db/postgresDB');
 
-
 /**
- * @description Obtiene un post por id
- * @author Juan Sebastian Vernaza Lopez
- * @date 02/10/2021
- * @param {*} { post_id }
- * @return {*}
+ * @description Import project data (posts, comments, events) into the database.
+ * Uses a transaction to ensure atomicity.
+ * Validates input structure before processing.
+ * @param {Object} importData - The project data to import.
+ * @param {Array} importData.posts - Array of post objects.
+ * @param {Array} importData.posts_comments - Array of comment objects.
+ * @param {Array} importData.posts_events - Array of event objects.
+ * @returns {Promise<Object>} - Import summary with counts or error.
  */
- function getPostDetail({ post_id, session_user_email }) {
-  return new Promise((resolve, reject) => {
-    let posts = postgresDB.default.instance.db.posts;
-    let posts_comments = postgresDB.default.instance.db.posts_comments;
-    const sequelize = postgresDB.default.instance.db.sequelize;
+async function importProjectData(importData) {
+  const { posts, posts_comments, posts_events } = importData;
 
-    posts
-      .findAll({
-        where: { id: post_id },
-        attributes: {
-          include: [
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-            )`),
-              'like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-            )`),
-              'dislike_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-                AND posts_events.user_email = '${session_user_email}'
-            )`),
-              'u_like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-                AND posts_events.user_email = '${session_user_email}'
-            )`),
-              'u_dislike_count',
-            ],
-          ],
-        },
-        include: [
-          {
-            model: posts_comments,
-          },
-        ],
-        plain: false,
-        nest: true,
-      })
-      .then((posts) => {
-        resolve(posts);
-      })
-      .catch((e) => {
-        console.log(e);
-        reject(e);
-      });
-  });
-}
+  if (!Array.isArray(posts) || !Array.isArray(posts_comments) || !Array.isArray(posts_events)) {
+    throw new Error('Invalid import data format; posts, posts_comments, and posts_events must be arrays.');
+  }
 
-/**
- * @description funcion que permite traer paginados los post
- * @author Juan Sebastian Vernaza Lopez
- * @date 01/10/2021
- * @return {*}
- */
-function getPostsPagination({ limit, page, session_user_email }) {
-  return new Promise((resolve, reject) => {
-    const posts = postgresDB.default.instance.db.posts;
-    const posts_comments = postgresDB.default.instance.db.posts_comments;
-    const sequelize = postgresDB.default.instance.db.sequelize;
-    
-    posts
-      .findAll({
-        attributes: {
-          include: [
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-            )`),
-              'like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-            )`),
-              'dislike_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-                AND posts_events.user_email = '${session_user_email}'
-            )`),
-              'u_like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-                AND posts_events.user_email = '${session_user_email}'
-            )`),
-              'u_dislike_count',
-            ],
-          ],
-        },
-        include: [
-          {
-            model: posts_comments,
-          },
-        ],
-        offset: page * limit,
-        limit,
-        order: [['created_at', 'DESC']],
-        plain: false,
-        nest: true,
-      })
-      .then((posts) => {
-        resolve(posts);
-      })
-      .catch((e) => {
-        console.log(e);
-        reject(e);
-      });
-  });
-}
+  const db = postgresDB.default.instance.db;
+  const sequelize = db.sequelize;
 
-/**
- * @description Retorna un post por id
- * @author Juan Sebastian Vernaza Lopez
- * @date 06/10/2021
- * @param {*} { post_id, session_user_email }
- * @return {*} 
- */
-function getPostById({ post_id, session_user_email }) {
-  return new Promise((resolve, reject) => {
-    let posts = postgresDB.default.instance.db.posts;
-    let posts_comments = postgresDB.default.instance.db.posts_comments;
-    posts
-      .findAll({
-        where: { id: post_id },
-        attributes: {
-          include: [
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-            )`),
-              'like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-            )`),
-              'dislike_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-                AND posts_events.user_email = '${user_email}'
-            )`),
-              'u_like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-                AND posts_events.user_email = '${user_email}'
-            )`),
-              'u_dislike_count',
-            ],
-          ],
-        },
-        include: [
-          {
-            model: posts_comments,
-          },
-        ],
-        plain: false,
-        nest: true,
-      })
-      .then((posts) => {
-        resolve(posts);
-      })
-      .catch((e) => {
-        console.log(e);
-        reject(e);
-      });
-  });
-}
+  const PostsModel = db.posts;
+  const CommentsModel = db.posts_comments;
+  const EventsModel = db.posts_events;
 
-/**
- * @description Crea un nuevo post en la BD
- * @author Juan Sebastian Vernaza Lopez
- * @date 02/10/2021
- * @param {*} {name, content, user_email}
- * @return {*}
- */
-function createNewPosts({ name, content, user_email }) {
-  return new Promise((resolve, reject) => {
-    let posts = postgresDB.default.instance.db.posts;
-    //models.posts
-    posts
-      .create({
-        name,
-        content,
-        user_email,
-        created_at: new Date(),
-      })
-      .then(async (success) => {
-        resolve(success);
-      })
-      .catch((e) => {
-        reject(e);
-      });
-  });
+  let transaction;
+
+  try {
+    transaction = await sequelize.transaction();
+
+    // Bulk insert posts
+    const createdPosts = await PostsModel.bulkCreate(posts, { transaction, returning: true });
+
+    // We need to map old post ids to new post ids if the import data has ids to maintain relationships
+    // Assuming imported posts have 'id' field which is primary key from source
+    // Map old post id to new post id
+    const postIdMap = new Map();
+    for (let i = 0; i < posts.length; i++) {
+      if (posts[i].id && createdPosts[i]) {
+        postIdMap.set(posts[i].id, createdPosts[i].id);
+      }
+    }
+
+    // Prepare comments with updated post_id
+    const preparedComments = posts_comments.map(comment => {
+      let mappedPostId = comment.post_id && postIdMap.has(comment.post_id) ? postIdMap.get(comment.post_id) : null;
+      return {
+        name: comment.name,
+        content: comment.content,
+        user_email: comment.user_email,
+        post_id: mappedPostId
+      };
+    }).filter(c => c.post_id !== null); // filter out comments for posts not imported
+
+    // Bulk insert comments
+    await CommentsModel.bulkCreate(preparedComments, { transaction });
+
+    // Prepare events with updated post_id
+    const preparedEvents = posts_events.map(event => {
+      let mappedPostId = event.post_id && postIdMap.has(event.post_id) ? postIdMap.get(event.post_id) : null;
+      return {
+        user_email: event.user_email,
+        like: event.like || 0,
+        dislike: event.dislike || 0,
+        post_id: mappedPostId
+      };
+    }).filter(e => e.post_id !== null); // filter out events for posts not imported
+
+    // Bulk insert events
+    await EventsModel.bulkCreate(preparedEvents, { transaction });
+
+    await transaction.commit();
+
+    return {
+      success: true,
+      message: 'Import completed successfully.',
+      counts: {
+        posts: createdPosts.length,
+        comments: preparedComments.length,
+        events: preparedEvents.length
+      }
+    };
+  } catch (error) {
+    if (transaction) await transaction.rollback();
+    throw error;
+  }
 }
 
 module.exports = {
-  getPostsPagination,
-  createNewPosts,
-  getPostById,
-  getPostDetail
+  importProjectData
 };
