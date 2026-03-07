@@ -3,18 +3,17 @@ const { verifyToken } = require('../../middleware/authorization');
 const { getPosts, createPost, updatePost, deletePost } = require('../../handlers/posts/postsHandlers');
 const { generateMessage } = require('../../handlers/errors/errorsMessageBuilder');
 
-
 const init = (app) => {
     var myLogger = async function (req, res, next) {
       res.setTimeout(50000, function () {
-        const response = { message: 'La petición esta tardando en responder.', error: true };
+        const response = { message: 'La petici\u00f3n esta tardando en responder.', error: true };
         res.json(response);
       });
   
       next();
     };
   
-    app.get('/posts/v1/getPosts/:limit/:page', [myLogger, verifyToken], getPosts);
+    app.get('/posts/v1/:page/:limit', [myLogger, verifyToken], getPosts);
     app.post('/posts/v1/createPost', [myLogger, verifyToken], createPost);
     app.patch('/posts/v1/updatePost', [myLogger, verifyToken], updatePost);
     app.delete('/posts/v1/deletePost', [myLogger, verifyToken], deletePost);
@@ -31,4 +30,3 @@ const init = (app) => {
   };
   
   module.exports.init = init;
-

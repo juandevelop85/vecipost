@@ -1,95 +1,33 @@
-// let models = require('../db ');
 const postgresDB = require('../../db/postgresDB');
 
-
 /**
- * @description Obtiene un post por id
- * @author Juan Sebastian Vernaza Lopez
- * @date 02/10/2021
- * @param {*} { post_id }
- * @return {*}
- */
- function getPostDetail({ post_id, session_user_email }) {
-  return new Promise((resolve, reject) => {
-    let posts = postgresDB.default.instance.db.posts;
-    let posts_comments = postgresDB.default.instance.db.posts_comments;
-    const sequelize = postgresDB.default.instance.db.sequelize;
-
-    posts
-      .findAll({
-        where: { id: post_id },
-        attributes: {
-          include: [
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-            )`),
-              'like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-            )`),
-              'dislike_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-                AND posts_events.user_email = '${session_user_email}'
-            )`),
-              'u_like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-                AND posts_events.user_email = '${session_user_email}'
-            )`),
-              'u_dislike_count',
-            ],
-          ],
-        },
-        include: [
-          {
-            model: posts_comments,
-          },
-        ],
-        plain: false,
-        nest: true,
-      })
-      .then((posts) => {
-        resolve(posts);
-      })
-      .catch((e) => {
-        console.log(e);
-        reject(e);
-      });
-  });
-}
-
-/**
- * @description funcion que permite traer paginados los post
+ * @description Get paginated posts with aggregated likes, dislikes and comments
  * @author Juan Sebastian Vernaza Lopez
  * @date 01/10/2021
- * @return {*}
+ * @param {Object} params
+ * @param {number} params.limit - Number of posts per page
+ * @param {number} params.page - Page number (0 indexed)
+ * @param {string} params.session_user_email - Current user email for user-specific like/dislike
+ * @return {Promise<Array>} Resolves to array of post objects with aggregated data
  */
 function getPostsPagination({ limit, page, session_user_email }) {
   return new Promise((resolve, reject) => {
     const posts = postgresDB.default.instance.db.posts;
     const posts_comments = postgresDB.default.instance.db.posts_comments;
     const sequelize = postgresDB.default.instance.db.sequelize;
-    
+
+    // Validate and sanitize inputs
+    const lim = Number(limit);
+    const pg = Number(page);
+    if (isNaN(lim) || lim <= 0) {
+      return reject(new Error('Invalid limit parameter')); 
+    }
+    if (isNaN(pg) || pg < 0) {
+      return reject(new Error('Invalid page parameter'));
+    }
+
+    const offset = pg * lim;
+
     posts
       .findAll({
         attributes: {
@@ -99,8 +37,8 @@ function getPostsPagination({ limit, page, session_user_email }) {
                 SELECT COUNT(*)
                 FROM posts_events AS posts_events
                 WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-            )`),
+                AND posts_events.like = true
+              )`),
               'like_count',
             ],
             [
@@ -108,8 +46,8 @@ function getPostsPagination({ limit, page, session_user_email }) {
                 SELECT COUNT(*)
                 FROM posts_events AS posts_events
                 WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-            )`),
+                AND posts_events.dislike = true
+              )`),
               'dislike_count',
             ],
             [
@@ -117,9 +55,9 @@ function getPostsPagination({ limit, page, session_user_email }) {
                 SELECT 1
                 FROM posts_events AS posts_events
                 WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
+                AND posts_events.like = true
                 AND posts_events.user_email = '${session_user_email}'
-            )`),
+              )`),
               'u_like_count',
             ],
             [
@@ -127,9 +65,9 @@ function getPostsPagination({ limit, page, session_user_email }) {
                 SELECT 1
                 FROM posts_events AS posts_events
                 WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
+                AND posts_events.dislike = true
                 AND posts_events.user_email = '${session_user_email}'
-            )`),
+              )`),
               'u_dislike_count',
             ],
           ],
@@ -139,8 +77,8 @@ function getPostsPagination({ limit, page, session_user_email }) {
             model: posts_comments,
           },
         ],
-        offset: page * limit,
-        limit,
+        offset: offset,
+        limit: lim,
         order: [['created_at', 'DESC']],
         plain: false,
         nest: true,
@@ -149,108 +87,7 @@ function getPostsPagination({ limit, page, session_user_email }) {
         resolve(posts);
       })
       .catch((e) => {
-        console.log(e);
-        reject(e);
-      });
-  });
-}
-
-/**
- * @description Retorna un post por id
- * @author Juan Sebastian Vernaza Lopez
- * @date 06/10/2021
- * @param {*} { post_id, session_user_email }
- * @return {*} 
- */
-function getPostById({ post_id, session_user_email }) {
-  return new Promise((resolve, reject) => {
-    let posts = postgresDB.default.instance.db.posts;
-    let posts_comments = postgresDB.default.instance.db.posts_comments;
-    posts
-      .findAll({
-        where: { id: post_id },
-        attributes: {
-          include: [
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-            )`),
-              'like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT COUNT(*)
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-            )`),
-              'dislike_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.like = 1
-                AND posts_events.user_email = '${user_email}'
-            )`),
-              'u_like_count',
-            ],
-            [
-              sequelize.literal(`(
-                SELECT 1
-                FROM posts_events AS posts_events
-                WHERE posts_events.post_id = posts.id
-                AND posts_events.dislike = 1
-                AND posts_events.user_email = '${user_email}'
-            )`),
-              'u_dislike_count',
-            ],
-          ],
-        },
-        include: [
-          {
-            model: posts_comments,
-          },
-        ],
-        plain: false,
-        nest: true,
-      })
-      .then((posts) => {
-        resolve(posts);
-      })
-      .catch((e) => {
-        console.log(e);
-        reject(e);
-      });
-  });
-}
-
-/**
- * @description Crea un nuevo post en la BD
- * @author Juan Sebastian Vernaza Lopez
- * @date 02/10/2021
- * @param {*} {name, content, user_email}
- * @return {*}
- */
-function createNewPosts({ name, content, user_email }) {
-  return new Promise((resolve, reject) => {
-    let posts = postgresDB.default.instance.db.posts;
-    //models.posts
-    posts
-      .create({
-        name,
-        content,
-        user_email,
-        created_at: new Date(),
-      })
-      .then(async (success) => {
-        resolve(success);
-      })
-      .catch((e) => {
+        console.error(e);
         reject(e);
       });
   });
@@ -258,7 +95,4 @@ function createNewPosts({ name, content, user_email }) {
 
 module.exports = {
   getPostsPagination,
-  createNewPosts,
-  getPostById,
-  getPostDetail
 };
