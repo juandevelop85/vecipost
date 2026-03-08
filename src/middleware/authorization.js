@@ -1,14 +1,27 @@
-let verifyToken = async (req, res, next) => {
-  let user_session = req.get('authorization');
-  
-  if (Object.keys(req.body).length !== 0) {
-    req.body.session_user_email = user_session;
-  } else if (Object.keys(req.params).length !== 0) {
-    req.params.session_user_email = user_session;
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey';
+
+async function verifyToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Authorization header missing' });
   }
-  next();
-};
+
+  const token = authHeader.split(' ')[1]; // Expecting 'Bearer <token>'
+  if (!token) {
+    return res.status(401).json({ error: 'Token missing' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded; // attach decoded token payload (user id, email) to request
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+}
 
 module.exports = {
-  verifyToken,
+  verifyToken
 };

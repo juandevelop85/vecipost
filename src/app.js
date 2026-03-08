@@ -14,6 +14,9 @@ const OpenApiValidator = require('express-openapi-validator');
 // Import postgresDB singleton
 const postgresDB = require('./db/postgresDB').default;
 
+// Import auth routes
+const authRoutes = require('./routes/auth/index');
+
 const ROUTES_DIR = 'routes/';
 
 async function main() {
@@ -68,6 +71,9 @@ async function main() {
       console.error(error);
     }
   }
+
+  // Use auth routes
+  authRoutes.init(app);
 }
 
 main();
