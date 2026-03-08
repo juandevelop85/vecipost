@@ -16,6 +16,9 @@ const postgresDB = require('./db/postgresDB').default;
 
 const ROUTES_DIR = 'routes/';
 
+// Import new auth router
+const authRouter = require('./routes/auth');
+
 async function main() {
   app = express();
   
@@ -68,6 +71,9 @@ async function main() {
       console.error(error);
     }
   }
+
+  // Register auth routes
+  app.use('/auth/v1', authRouter);
 }
 
 main();
